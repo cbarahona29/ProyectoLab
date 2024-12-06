@@ -1,6 +1,7 @@
 package ghostgame;
 
 import javax.swing.JOptionPane;
+    //Cesar Garciaa//
 
 public class Player {
      String usuario;
