@@ -1,9 +1,9 @@
 package ghostgame;
 
-import java.util.Random;
 import javax.swing.JOptionPane;
 
 public class GhostGame {
+    //Cesar Garciaa//
 
     Player[] jugadores = new Player[10];
     int contadorjugadores = 0;
@@ -11,7 +11,7 @@ public class GhostGame {
     Player player2 = null;
     Tablero Tablero;
     int dificultad = 8;
-    Random random = new Random();
+    boolean isRandomMode = true; // Modo de colocación aleatoria (por defecto activado)
 
     public void login() {
         String usuario = JOptionPane.showInputDialog("Ingrese su usuario:").toLowerCase();
@@ -106,7 +106,7 @@ public class GhostGame {
         colocarFantasmas(playerActivo);
         colocarFantasmas(player2);
 
-        int turno = random.nextInt(2); // Decide aleatoriamente quién inicia el juego
+        int turno = (Math.random() < 0.5) ? 0 : 1; // Decide aleatoriamente quién inicia el juego
         String[] nombreJugadores = {playerActivo.getUsuario(), player2.getUsuario()};
 
         while (true) {
@@ -134,12 +134,12 @@ public class GhostGame {
 
             char fantasma = Tablero.getTipoReal(xInicio, yInicio);
             if (fantasma == '-') {
-                JOptionPane.showMessageDialog(null, "No hay un fantasma en esa coordenada seleccionada intentelo de nuevo");
+                JOptionPane.showMessageDialog(null, "No hay un fantasma en la posición seleccionada. Intente de nuevo.");
                 continue;
             }
 
             if (!Tablero.valido(xDestino, yDestino)) {
-                JOptionPane.showMessageDialog(null, "Movimiento fuera del tablero hagalo otra vez");
+                JOptionPane.showMessageDialog(null, "Movimiento fuera del tablero. Intente nuevamente.");
                 continue;
             }
 
@@ -172,12 +172,12 @@ public class GhostGame {
             }
 
             if (fantasmasBuenosActivos == 0 || fantasmasMalosOponente == 0) {
-                JOptionPane.showMessageDialog(null, "" +player2.getUsuario() + " ha ganado!");
+                JOptionPane.showMessageDialog(null, "¡" + player2.getUsuario() + " ha ganado!");
                 player2.addPuntos(3);
                 break;
             }
             if (fantasmasBuenosOponente == 0 || fantasmasMalosActivos == 0) {
-                JOptionPane.showMessageDialog(null, "" + playerActivo.getUsuario() + " ha ganado!");
+                JOptionPane.showMessageDialog(null, "¡" + playerActivo.getUsuario() + " ha ganado!");
                 playerActivo.addPuntos(3);
                 break;
             }
@@ -185,7 +185,7 @@ public class GhostGame {
             turno = 1 - turno; 
         }
 
-        JOptionPane.showMessageDialog(null, "Juego terminado regresando al menu principal");
+        JOptionPane.showMessageDialog(null, "Juego terminado. Regresando al menú principal");
         menu();
     }
 
@@ -198,12 +198,10 @@ public class GhostGame {
             int x, y;
             char tipo;
 
-            boolean isRandom = random.nextBoolean();
-
-            if (isRandom) {
+            if (isRandomMode) {
                 do {
-                    x = random.nextInt(6);
-                    y = random.nextInt(6);
+                    x = (int) (Math.random() * 6);
+                    y = (int) (Math.random() * 6);
                     tipo = buenosRestantes > 0 ? 'B' : 'M';
                 } while (!Tablero.colocarFantasma(x, y, tipo));
 
@@ -218,27 +216,16 @@ public class GhostGame {
                 if (y == -1) return;
 
                 tipo = buenosRestantes > 0 ? 'B' : 'M';
+
+                if (!Tablero.colocarFantasma(x, y, tipo)) {
+                    JOptionPane.showMessageDialog(null, "Posición inválida. Intente nuevamente.");
+                    i--; 
+                    continue;
+                }
+
                 if (tipo == 'B') buenosRestantes--;
                 else malosRestantes--;
-
-                while (!Tablero.colocarFantasma(x, y, tipo)) {
-                    JOptionPane.showMessageDialog(null, "Posición no válida. Intente nuevamente.");
-                    x = Coordenada("Ingrese la columna (y) para colocar un fantasma (0-5, escriba -1 para salir):");
-                    if (x == -1) return;
-
-                    y = Coordenada("Ingrese la fila (x) para colocar un fantasma (0-5, escriba -1 para salir):");
-                    if (y == -1) return;
-                }
             }
-        }
-    }
-
-    public int Coordenada(String mensaje) {
-        try {
-            return Integer.parseInt(JOptionPane.showInputDialog(mensaje));
-        } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(null, "Entrada no válida. Por favor ingrese un número.");
-            return Coordenada(mensaje);
         }
     }
 
@@ -289,7 +276,7 @@ public class GhostGame {
                 }
                 switch (mode) {
                     case "1":
-        boolean isRandomMode = true;
+               isRandomMode = true;
                         JOptionPane.showMessageDialog(null, "Modo configurado: Aleatorio");
                         break;
                     case "2":
@@ -309,7 +296,16 @@ public class GhostGame {
         }
     }
 }
-  
+    public int Coordenada(String mensaje) {
+           
+        try {
+            return Integer.parseInt(JOptionPane.showInputDialog(mensaje));
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(null, "Entrada no válida. Por favor ingrese un número.");
+            return Coordenada(mensaje);
+        }
+    }
+
     public void reportes() {
         while (true) {
             String reportes = JOptionPane.showInputDialog("Reportes\n"
