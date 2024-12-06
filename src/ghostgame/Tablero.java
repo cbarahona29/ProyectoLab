@@ -2,6 +2,8 @@ package ghostgame;
 
 import javax.swing.JOptionPane;
 
+    //Cesar Garciaa//
+
 public class Tablero {
     char[][] tablero;
     char[][] tiposReales;
@@ -76,4 +78,5 @@ public class Tablero {
     return celdas[x][y] == '-';
     }
 }
+
 
