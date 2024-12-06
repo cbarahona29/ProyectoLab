@@ -3,6 +3,7 @@ package ghostgame;
 import javax.swing.JOptionPane;
 
 public class Main {
+    //Cesar Garciaa//
     public static void main(String[] args) {
         Main main = new Main();
         main.mostrarMenuPrincipal();
@@ -35,6 +36,7 @@ public class Main {
         }
     }
 }
+
 
 
 
